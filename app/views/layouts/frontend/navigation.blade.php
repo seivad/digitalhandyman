@@ -6,11 +6,11 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Digital Handyman</a>
+      <a class="navbar-brand" href="{{ route('home') }}">Digital Handyman</a>
     </div>
     <div class="navbar-collapse collapse navbar-inverse-collapse">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
+        <li class="active"><a href="{{ route('home') }}">Home</a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Services <b class="caret"></b></a>
           <ul class="dropdown-menu">
@@ -28,7 +28,7 @@
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">News</a></li>
+        <li><a href="{{ route('pages.news') }}">News</a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
           <ul class="dropdown-menu">

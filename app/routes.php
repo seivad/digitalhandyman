@@ -243,6 +243,7 @@ Route::group(['before' => 'auth|administrator', 'prefix' => 'dashboard'], functi
 
 });
 
+Route::get('/news', array('as' => 'pages.news', 'uses' => 'NewsController@index'));
 Route::get('/{slug?}', array('as' => 'pages.view', 'uses' => 'PagesController@view'))->where('slug', '(.*)');
 
 App::missing(function($exception)

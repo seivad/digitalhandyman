@@ -10,49 +10,6 @@ class PagesController extends \BaseController {
 	   return urlencode(strtolower($slug));
 	}
 
-
-	private function breadcrumbs() {
-
-		$crumbs = explode("/",$_SERVER["REQUEST_URI"]);
-		array_shift($crumbs);
-
-		$linkCrumbs = $crumbs;
-
-		$text = '';
-		$items = count($linkCrumbs);
-		$i = 0;
-		$links = array();
-
-		foreach($linkCrumbs as $link) {
-
-			if(++$i > 0) {
-				$text = $text . '/' . $link;
-			} else {
-				$text;
-			}
-
-			$links[] = $text;
-		}
-
-		$breadcrumbs = '<ol class="breadcrumb">
-							<li><a href="'. URL('/').'">Home</a></li>';
-		
-		foreach($crumbs as $key => $crumb) {
-
-			if(end($crumbs) !== $crumb)
-			{
-		    	$breadcrumbs .= '<li><a href="'. $links[$key] .'">'. ucwords(str_replace(array("_","-"),array(""," "),$crumb)) .'</a></li>';
-			} 
-			else
-			{
-				$breadcrumbs .= '<li class="active">'. ucwords(str_replace(array("_","-"),array(""," "),$crumb)) .'</li></ol>';
-			}
-		}
-
-		return $breadcrumbs;
-
-	}
-
 	/**
 	 * Display a listing of the resource.
 	 * GET /pages
@@ -61,7 +18,7 @@ class PagesController extends \BaseController {
 	 */
 	public function index()
 	{
-		$pages = Page::all();
+		$pages = Page::orderBy('slug')->get();
 
 		return View::make('dashboard.pages.index', compact('pages'));
 	}
@@ -77,9 +34,12 @@ class PagesController extends \BaseController {
 
 		$slugs = Page::whereNotNull('slug')->get(array('slug'))->toArray();
 
-		$result = array();
-		foreach($slugs as $slug)
+		$result = array('' => '-');
+		foreach($slugs as $slug) {
 			$result[$slug['slug']] = $slug['slug'];
+		}
+
+		asort($result);
 
 		return View::make('dashboard.pages.create', compact('result'));
 	}
@@ -106,7 +66,19 @@ class PagesController extends \BaseController {
 
 		$page = new Page;
 		$page->title = ucwords(strtolower(Input::get('title')));
-		$page->slug = $this->create_slug(Input::get('title'));
+		
+		if(!empty(Input::get('parent'))) {
+			$page->slug = Input::get('parent') . '/' . $this->create_slug(Input::get('title'));
+		} else {
+			$page->slug = $this->create_slug(Input::get('title'));
+		}
+		
+		if(!empty(Input::get('parent'))) {
+			$page->parent = Input::get('parent');
+		} else {
+			$page->parent = null;
+		}
+
 		$page->content = Input::get('content');
 		$page->meta = array(
 				'metaTitle' =>  ucwords(strtolower(Input::get('metaTitle'))),
@@ -162,8 +134,11 @@ class PagesController extends \BaseController {
 		$slugs = Page::whereNotNull('slug')->get(array('slug'))->toArray();
 
 		$result = array('' => '-');
-		foreach($slugs as $slug)
+		foreach($slugs as $slug) {
 			$result[$slug['slug']] = $slug['slug'];
+		}
+
+		asort($result);
 
 		return View::make('dashboard.pages.edit', compact('page', 'result'));
 	}
@@ -192,11 +167,9 @@ class PagesController extends \BaseController {
 
 		$page->title = ucwords(strtolower(Input::get('title')));
 
-		if(!empty(Input::get('parent'))) {
-			$page->slug = Input::get('parent') . '/' . $this->create_slug(Input::get('title'));
-		} else {
-			$page->slug = $this->create_slug(Input::get('title'));
-		}
+		
+		$page->slug = Input::get('slug');
+		
 		if(!empty(Input::get('parent'))) {
 			$page->parent = Input::get('parent');
 		} else {

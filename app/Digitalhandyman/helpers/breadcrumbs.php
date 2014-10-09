@@ -36,7 +36,7 @@ class Breadcrumbs {
 
 			if(end($crumbs) !== $crumb)
 			{
-		    	$breadcrumbs .= '<li><a href="'. $links[$key] .'">'. ucwords(str_replace(array("_","-"),array(""," "),$crumb)) .'</a></li>';
+		    	$breadcrumbs .= '<li><a href="'. URL('/') . $links[$key] .'">'. ucwords(str_replace(array("_","-"),array(""," "),$crumb)) .'</a></li>';
 			} 
 			else
 			{

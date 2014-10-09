@@ -15,7 +15,6 @@ class DashboardController extends \BaseController {
 		try
 		{	
 			$user = Sentry::findUserByID(Sentry::getUser()->_id);
-
 		    // Get the user groups
 		    $groups = $user->getGroups();
 
