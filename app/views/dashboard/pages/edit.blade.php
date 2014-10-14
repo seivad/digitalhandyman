@@ -52,10 +52,11 @@
 			  </div>
 			</div>
 
-			<div class="form-group">
+			<div class="form-group loadercenter">
 			  {{ Form::label('content', 'Content', array('class' => 'control-label col-lg-3')) }}
 			  <div class="col-lg-9">
-			   {{ Form::textarea('content', null, array('class' => 'form-control summernote')) }}
+			   {{ Form::textarea('content', null, array('class' => 'form-control summernote', 'id' => 'summernote')) }}
+			   <div id='loader'><img src="{{ asset('/images/spinner.gif') }}"/></div>
 			  </div>
 			</div>
 
@@ -88,6 +89,7 @@
 			  <div class="col-lg-9 col-lg-offset-3">
 			    {{ Form::submit('Save Page', array('class' => 'btn btn-primary')) }}
 			    <a href="{{ route('dashboard.pages.index') }}" class="btn btn-default">Go Back</a>
+			    <a href="{{ url('/') . $page->slug }}" class="btn btn-success">View</a>
 			  </div>
 			</div>				
 
@@ -95,6 +97,66 @@
 		{{ Form::close() }}
 
 	</div>	
+
+	
+
+	@stop
+
+	@section('scripts')
+
+	<script>
+		$(document).ready(function() {
+
+		var $loading = $('#loader').hide();
+		$(document)
+		  .ajaxStart(function () {
+		    $loading.show();
+		  })
+		  .ajaxStop(function () {
+		    $loading.hide();
+		  });
+
+			 $('#summernote').summernote({
+		        height: "500px",
+		        toolbar: [
+					['style', ['style', 'bold', 'italic', 'underline', 'clear', 'strikethrough']],
+					['para', ['ul', 'ol', 'paragraph']],
+					['insert', ['picture', 'link', 'video', 'table', 'hr']],
+					['misc', ['fullscreen', 'codeview']]
+				],
+		        onImageUpload: function(files, editor, welEditable) {
+		            sendFile(files[0],editor,welEditable);
+		        }
+		    });
+			        
+		});
+
+		function sendFile(file, editor, welEditable) {
+			formData = new FormData();
+			formData.append('key', '{{ $folder }}/' + file.name);
+			formData.append('AWSAccessKeyId', '{{ $accessKeyId }}');
+			formData.append('acl', 'public-read');
+			formData.append('policy', '{{ $policy }}');
+			formData.append('signature', '{{ $signature }}');
+			formData.append('success_action_status', '201');
+			formData.append('file', file);
+
+			$.ajax({
+				data: formData,
+				dataType: 'xml',
+				type: "POST",
+				cache: false,
+				contentType: false,
+				processData: false,
+				url: "https://{{ $bucket }}.s3.amazonaws.com/",
+				success: function(data) {
+				  // getting the url of the file from amazon and insert it into the editor
+				  var url = $(data).find('Location').text();
+				  editor.insertImage(welEditable, url);
+				}
+			});
+	    }
+	</script>
 
 	@stop
 

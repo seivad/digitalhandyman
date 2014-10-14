@@ -2,10 +2,7 @@
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-Route::get('/', array('as' => 'home', function()
-{
-	return View::make('pages.home');
-}));
+
 
 Route::get('/login', array('as' => 'session.login', 'uses' => 'SessionController@index'));
 Route::post('/login', 'SessionController@create');
@@ -217,15 +214,13 @@ Route::get('/create', function() {
 
 
 
-# Standard User Routes
+# Customer User Routes
 Route::group(['before' => 'auth|customer'], function()
 {
-
 	Route::get('/customers', array('uses' => 'CustomerController@index'));
-
 });
 
-# Admin Routes
+# Admin User Routes
 Route::group(['before' => 'auth|administrator', 'prefix' => 'dashboard'], function()
 {
 	Route::get('/', array('as' => 'dashboard','uses' => 'DashboardController@index'));
@@ -233,18 +228,22 @@ Route::group(['before' => 'auth|administrator', 'prefix' => 'dashboard'], functi
 	Route::post('posts/{id}/restore', array('as' => 'dashboard.posts.restore', 'uses' => 'PostsController@restore'));
 	Route::resource('posts', 'PostsController');
 
-	Route::get('pages/deleted', array('as' => 'dashboard.pages.deleted','uses' => 'PagesController@deletedPosts'));
+	Route::get('pages/deleted', array('as' => 'dashboard.pages.deleted','uses' => 'PagesController@deletedPages'));
 	Route::post('pages/{id}/restore', array('as' => 'dashboard.pages.restore', 'uses' => 'PagesController@restore'));
 	Route::resource('pages', 'PagesController');
 	
 	Route::resource('users', 'UserController');
-
-
-
 });
+
+
+Route::get('/', array('as' => 'home', function()
+{
+	return View::make('pages.home');
+}));
 
 Route::get('/news', array('as' => 'pages.news', 'uses' => 'NewsController@index'));
 Route::get('/{slug?}', array('as' => 'pages.view', 'uses' => 'PagesController@view'))->where('slug', '(.*)');
+
 
 App::missing(function($exception)
 {

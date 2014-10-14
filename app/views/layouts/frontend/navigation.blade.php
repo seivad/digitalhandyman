@@ -23,7 +23,7 @@
             <li><a href="#">One more separated link</a></li>
           </ul>
         </li>
-        <li><a href="#">Prices</a></li>
+        <li><a href="{{ route('home') }}/prices">Prices</a></li>
         <li><a href="#">Book Now</a></li>
       </ul>
 

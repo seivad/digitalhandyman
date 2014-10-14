@@ -3,3 +3,13 @@ body { padding-top: 70px; }
 .navbar-inverse { transition: border-color 1.5s ease 0s, background-color 0.5s ease 0s; }
 .navbar-fixed-top { transition: background-color 0.5s ease 0s;}
 .navbar-fixed-top.opaque { background-color: rgba(255,255,255,0);transition: background-color 0.5s ease 0s;}
+
+
+.loadercenter {
+	position: relative;
+}
+#loader {
+position: absolute;
+left: 50%;
+top: 50%;
+}

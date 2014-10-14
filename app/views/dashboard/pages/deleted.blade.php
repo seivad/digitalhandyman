@@ -1,7 +1,7 @@
 @extends('layouts.dashboard.master')
 
 	@section('title')
-		Deleted Posts
+		Deleted Pages
 	@stop
 
 	@section('content')
@@ -15,28 +15,28 @@
 			</div>
 		@endif
 
-		<h1>Deleted Posts</h1>
+		<h1>Deleted Pages</h1>
 	
-		@forelse($posts as $post)
+		@forelse($pages as $page)
 		<div class="row">
 			<div class="col-md-6">
-			<h2>{{ $post->title }}</h2>
-				<p>{{ substr($post->content, 0, 250) . '...' }}</p>
+			<h2>{{ $page->title }}</h2>
+				<p>{{ substr($page->content, 0, 250) . '...' }}</p>
 			</div>
 			<div class="col-md-3">
-				<p><strong>Tags:</strong><br /> {{ implode($post->tags, ', ') }}<br />
-					<strong>Category:</strong><br /> {{ $post->category }}<br />
-					<strong>Meta Title:</strong><br /> {{ $post->meta['metaTitle'] }}<br />
-					<strong>Meta Keywords:</strong><br /> {{ implode($post->meta['metaKeywords'], ', ') }}<br />
-					<strong>Meta Description:</strong><br /> {{ $post->meta['metaDescription'] }}</p>
+				<p>
+					<strong>Meta Title:</strong><br /> {{ $page->meta['metaTitle'] }}<br />
+					<strong>Meta Keywords:</strong><br /> {{ implode($page->meta['metaKeywords'], ', ') }}<br />
+					<strong>Meta Description:</strong><br /> {{ $page->meta['metaDescription'] }}
+				</p>
 			</div>
 			<div class="col-md-3">
-				{{ Form::open(array('route' => array('dashboard.posts.restore', $post->_id), 'method' => 'POST')) }}
+				{{ Form::open(array('route' => array('dashboard.pages.restore', $page->_id), 'method' => 'page')) }}
 				<div class="form-group">
 					{{ Form::submit('Restore', array('class' => 'btn btn-primary') ) }}
 				</div>
 				{{ Form::close() }}
-				{{ Form::open(array('route' => array('dashboard.posts.destroy', $post->_id), 'method' => 'DELETE')) }}
+				{{ Form::open(array('route' => array('dashboard.pages.destroy', $page->_id), 'method' => 'DELETE')) }}
 				<div class="form-group">
 					{{ Form::hidden('force', true) }}
 					{{ Form::submit('Delete', array('class' => 'btn btn-danger') ) }}
@@ -46,7 +46,7 @@
 		</div>
 		<hr />
 		@empty
-			<p><strong>Opps!</strong> No Posts Available</p>
+			<p><strong>Opps!</strong> No Pages Available</p>
 		@endforelse
 		
 

@@ -10,7 +10,7 @@ class NewsController extends \BaseController {
 	 */
 	public function index()
 	{
-		//
+		return 'News Feed';
 	}
 
 	/**

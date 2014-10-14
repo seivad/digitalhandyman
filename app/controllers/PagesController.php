@@ -91,17 +91,20 @@ class PagesController extends \BaseController {
 
 	}
 
-	public function view($slug = 'home')
+	public function view($slug = '/')
 	{
 
 		$page = Page::whereSlug($slug)->firstOrFail();
-		//$breadcrumbs = $this->breadcrumbs();
+
+		if(!$page) {
+			dd('wooo');
+		}
+
 		$breadcrumbs = new Breadcrumbs;
 
 		if($page) {
 			return View::make('pages.index', compact('page', 'breadcrumbs'));
 		}
-
 		return 'error';
 	}
 
@@ -140,7 +143,27 @@ class PagesController extends \BaseController {
 
 		asort($result);
 
-		return View::make('dashboard.pages.edit', compact('page', 'result'));
+		$bucket = '5150studios';
+		$folder = 'images';
+
+		// these can be found on your Account page, under Security Credentials > Access Keys
+		$accessKeyId = 'AKIAIVFLEHML7AIAHADQ';
+		$secret = '3znty2f6VkyOrJBDHDjwW4FU8mL9XZd1Itp3mDkm';
+
+		$policy = base64_encode(json_encode(array(
+		  // ISO 8601 - date('c'); generates uncompatible date, so better do it manually
+		  'expiration' => date('Y-m-d\TH:i:s.000\Z', strtotime('+2 days')), 
+		  'conditions' => array(
+		    array('bucket' => $bucket),
+		    array('acl' => 'public-read'),
+		    array('success_action_status' => '201'),
+		    array('starts-with', '$key', $folder.'/')
+		  )
+		)));
+
+		$signature = base64_encode(hash_hmac('sha1', $policy, $secret, true));
+
+		return View::make('dashboard.pages.edit', compact('page', 'result', 'accessKeyId', 'signature', 'policy', 'bucket', 'folder'));
 	}
 
 	/**
@@ -233,7 +256,7 @@ class PagesController extends \BaseController {
 
 	}
 
-	public function deletedpages()
+	public function deletedPages()
 	{
 		$pages = Page::onlyTrashed()->get();
 

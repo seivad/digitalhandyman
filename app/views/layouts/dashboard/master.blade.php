@@ -15,6 +15,7 @@
 		<link href="{{ asset('/css/bootstrap.min.css') }}" rel="stylesheet">
 		<link href="{{ asset('/css/font-awesome.min.css') }}" rel="stylesheet">
 		<link href="{{ asset('/css/summernote.css') }}" rel="stylesheet">
+		<link href="{{ asset('/css/styles.css') }}" rel="stylesheet">
 		@yield('styles')
 	</head>
 	<body>
@@ -43,16 +44,6 @@
 		<script src="{{ asset('/js/summernote.min.js') }}"></script>
 		<script type="text/javascript">
 			$(document).ready(function() {
-
-				 $('.summernote').summernote({
-				 	height: "500px",
-				 	toolbar: [
-						['style', ['style', 'bold', 'italic', 'underline', 'clear', 'strikethrough']],
-						['para', ['ul', 'ol', 'paragraph']],
-						['insert', ['picture', 'link', 'video', 'table', 'hr']],
-						['misc', ['fullscreen', 'codeview']]
-					]
-				 });
 
 				 //window.setTimeout(function() { $(".alert").alert('close'); }, 2500);
 
