@@ -147,8 +147,8 @@ class PagesController extends \BaseController {
 		$folder = 'images';
 
 		// these can be found on your Account page, under Security Credentials > Access Keys
-		$accessKeyId = 'AKIAIVFLEHML7AIAHADQ';
-		$secret = '3znty2f6VkyOrJBDHDjwW4FU8mL9XZd1Itp3mDkm';
+		$accessKeyId = '';
+		$secret = '';
 
 		$policy = base64_encode(json_encode(array(
 		  // ISO 8601 - date('c'); generates uncompatible date, so better do it manually
